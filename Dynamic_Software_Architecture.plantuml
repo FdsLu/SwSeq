@@ -1,0 +1,59 @@
+@startuml
+'Define "Application" component and colors
+box "Application" #aef2f7
+participant Main #E2EFD9
+participant SmApp #E2EFD9
+participant InitApp #E2EFD9
+participant ClkApp #E2EFD9
+participant PinIoApp #E2EFD9
+participant RtosApp #E2EFD9
+participant TaskApp #E2EFD9
+end box
+
+'Define "Service" component
+box "Service" #aef2f7
+participant UDS #E2EFD9
+participant FuSa #E2EFD9
+participant Security #E2EFD9
+end box
+
+'Define "HAL" component
+box "HAL" #aef2f7
+participant ClkHal #E2EFD9
+participant PinIoHal #E2EFD9
+end box
+
+'Define "OS" component
+box "OS" #aef2f7
+participant freeRTOS #E2EFD9
+end box
+
+'Define "Drivers" component
+box "Drivers" #aef2f7
+participant ClkDrv #E2EFD9
+participant PinIoDrv #E2EFD9
+end box
+
+'Define "Hardware" layer
+participant Hardware #C49BE1
+
+'Plan modules sequence
+Main -> SmApp: Change to SM_INIT state
+SmApp -> InitApp
+InitApp -> ClkApp: Init Clks
+ClkApp -> ClkHal
+ClkHal -> ClkDrv
+ClkDrv -> Hardware: Enable clock sources
+Hardware -> PinIoApp 
+PinIoApp -> PinIoHal: Init PinIOs
+PinIoHal -> PinIoDrv
+PinIoDrv -> Hardware: Drive GPIOs
+Hardware -> RtosApp
+RtosApp -> freeRTOS: Tasks config
+freeRTOS -> InitApp: Initialize finish
+InitApp -> TaskApp: Change to SM_TASK state
+TaskApp -> PinIoHal: GPIO sensing every 1s
+PinIoHal -> PinIoDrv
+PinIoDrv -> Hardware
+Hardware -> TaskApp
+@enduml
