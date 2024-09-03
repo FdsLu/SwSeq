@@ -1,43 +1,43 @@
 @startuml
-'Define "Application" component and colors
-box "Application" #aef2f7
-participant Main #E2EFD9
-participant SmApp #E2EFD9
-participant InitApp #E2EFD9
-participant ClkApp #E2EFD9
-participant PinIoApp #E2EFD9
-participant RtosApp #E2EFD9
-participant TaskApp #E2EFD9
+'---- Define "Application" component and colors ----
+box "Application (SWAD-001)" #aef2f7
+participant "SWAD-001-001\nMain" as Main #E2EFD9
+participant "SWAD-001-004\nSmApp" as SmApp #E2EFD9
+participant "SWAD-001-002\nInitApp" as InitApp #E2EFD9
+participant "SWAD-001-007\nClkApp" as ClkApp #E2EFD9
+participant "SWAD-001-003\nPinIoApp" as PinIoApp #E2EFD9
+participant "SWAD-001-005\nRtosApp" as RtosApp #E2EFD9
+participant "SWAD-001-006\nTaskApp" as TaskApp #E2EFD9
 end box
 
-'Define "Service" component
-box "Service" #aef2f7
-participant UDS #E2EFD9
-participant FuSa #E2EFD9
-participant Security #E2EFD9
+'---- Define "Service" component--------------------
+box "Service (SWAD-002)" #aef2f7
+participant "SWAD-002-001\nUDS" as UDS #E2EFD9
+participant "SWAD-002-002\nFuSa" as FuSa #E2EFD9
+participant "SWAD-002-003\nSecurity" as Security #E2EFD9
 end box
 
-'Define "HAL" component
-box "HAL" #aef2f7
-participant ClkHal #E2EFD9
-participant PinIoHal #E2EFD9
+'---- Define "HAL" component -----------------------
+box "HAL (SWAD-003)" #aef2f7
+participant "SWAD-003-001\nClkHal" as ClkHal #E2EFD9
+participant "SWAD-003-002\nPinIoHal" as PinIoHal #E2EFD9
 end box
 
-'Define "OS" component
-box "OS" #aef2f7
-participant freeRTOS #E2EFD9
+'---- Define "OS" component ------------------------
+box "OS (SWAD-004)" #aef2f7
+participant "SWAD-004-001\nfreeRTOS" as freeRTOS #E2EFD9
 end box
 
-'Define "Drivers" component
-box "Drivers" #aef2f7
-participant ClkDrv #E2EFD9
-participant PinIoDrv #E2EFD9
+'---- Define "Drivers" component -------------------
+box "Drivers (SWAD-005)" #aef2f7
+participant "SWAD-005-001\nClkDrv" as ClkDrv #E2EFD9
+participant "SWAD-005-002\nPinIoDrv" as PinIoDrv #E2EFD9
 end box
 
-'Define "Hardware" layer
+'---- Define "Hardware" layer ----------------------
 participant Hardware #C49BE1
 
-'Plan modules sequence
+'---- Plan modules sequence-------------------------
 Main -> SmApp: Change to SM_INIT state
 SmApp -> InitApp
 InitApp -> ClkApp: Init Clks
@@ -56,4 +56,5 @@ TaskApp -> PinIoHal: GPIO sensing every 1s
 PinIoHal -> PinIoDrv
 PinIoDrv -> Hardware
 Hardware -> TaskApp
+'---------------------------------------------------
 @enduml
