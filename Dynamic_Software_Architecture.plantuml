@@ -14,6 +14,7 @@ skinparam defaultFontName Arial
 skinparam defaultFontSize 12
 legend top
 |=        Object  |=           Colors  |
+| Hardware  |<back:sienna>                                    |
 | System  |<back:mediumpurple>                                    |
 | Layer  |<back:#FEE599>                                    |
 | Component |<back:#lightcyan>                                    |
@@ -62,7 +63,7 @@ participant "SWAD-005-002\nPinIoDrv" as PinIoDrv #E2EFD9
 end box
 
 '---- Define "Hardware" layer ----------------------
-participant Hardware #mediumpurple
+participant Hardware #sienna
 
 '---- Plan modules sequence-------------------------
 Main -> SmApp: Change to SM_INIT state
