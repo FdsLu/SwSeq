@@ -8,6 +8,24 @@
 '---------------------
 
 @startuml
+'----- Table Description ----
+'Object Colors Setting
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+legend top
+|=        Object  |=           Colors  |
+| System  |<back:mediumpurple>                                    |
+| Layer  |<back:#FEE599>                                    |
+| Component |<back:#lightcyan>                                    |
+| Module |<back:#E2EFD9>                                    |
+| Uint |<back:#aquamarine>                                    |
+| Tiny |<back:#pink>                                    |
+'Arrow Function
+|=        Arrow |=        Description |
+| Solid Line (->) | Don't response value  |
+| Dotted Line (--->) | Response value |
+endlegend
+
 '---- Define "Application" component and colors ----
 box "Application (SWAD-001)" #aef2f7
 participant "SWAD-001-001\nMain" as Main #E2EFD9
@@ -44,26 +62,70 @@ participant "SWAD-005-002\nPinIoDrv" as PinIoDrv #E2EFD9
 end box
 
 '---- Define "Hardware" layer ----------------------
-participant Hardware #C49BE1
+participant Hardware #mediumpurple
 
 '---- Plan modules sequence-------------------------
 Main -> SmApp: Change to SM_INIT state
+activate SmApp
 SmApp -> InitApp
+activate InitApp
 InitApp -> ClkApp: Init Clks
+activate ClkApp
 ClkApp -> ClkHal
+activate ClkHal
 ClkHal -> ClkDrv
+activate  ClkDrv
 ClkDrv -> Hardware: Enable clock sources
-Hardware -> PinIoApp 
+activate Hardware
+Hardware --> ClkDrv
+deactivate Hardware
+ClkDrv --> ClkHal
+deactivate ClkDrv 
+ClkHal --> ClkApp
+deactivate ClkHal 
+ClkApp --> InitApp
+deactivate ClkApp 
+InitApp -->PinIoApp 
+activate PinIoApp 
 PinIoApp -> PinIoHal: Init PinIOs
+activate PinIoHal
 PinIoHal -> PinIoDrv
+activate PinIoDrv
 PinIoDrv -> Hardware: Drive GPIOs
-Hardware -> RtosApp
+activate Hardware
+Hardware --> PinIoDrv 
+deactivate Hardware
+PinIoDrv --> PinIoHal
+deactivate PinIoDrv
+PinIoHal --> PinIoApp
+deactivate PinIoHal
+PinIoApp --> InitApp
+deactivate PinIoApp 
+InitApp -> RtosApp
+activate  RtosApp
 RtosApp -> freeRTOS: Tasks config
-freeRTOS -> InitApp: Initialize finish
-InitApp -> TaskApp: Change to SM_TASK state
+activate freeRTOS
+freeRTOS --> RtosApp: Initialize finish
+deactivate freeRTOS
+RtosApp --> InitApp
+deactivate RtosApp
+
+InitApp --> SmApp
+deactivate InitApp
+deactivate SmApp
+SmApp -> TaskApp: Change to SM_TASK state
+
 TaskApp -> PinIoHal: GPIO sensing every 1s
+activate PinIoHal
 PinIoHal -> PinIoDrv
+activate PinIoDrv
 PinIoDrv -> Hardware
-Hardware -> TaskApp
+activate Hardware
+Hardware --> PinIoDrv
+deactivate Hardware
+PinIoDrv --> PinIoHal
+deactivate PinIoDrv
+PinIoHal --> TaskApp 
+deactivate PinIoHal
 '---------------------------------------------------
 @enduml
