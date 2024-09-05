@@ -1,3 +1,12 @@
+'--- Color Setting --- 
+' System is #DAE2F3
+' Layer is #FEE599
+' Component is #lightcyan
+' Module is #E2EFD9
+' Unit is #gainsboro
+' Tiny is #pink
+'---------------------
+
 @startuml
 '---- Define "Application" component and colors ----
 box "Application (SWAD-001)" #aef2f7
