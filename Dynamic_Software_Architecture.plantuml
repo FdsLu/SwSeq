@@ -5,7 +5,7 @@ skinparam defaultFontName Arial
 skinparam defaultFontSize 12
 legend top
 |=        Object  |=           Colors  |
-| Hardware  |<back:#A0522D>                                    |
+| Microcontroller  |<back:#A0522D>                                    |
 | System  |<back:#9370DB>                                    |
 | Layer  |<back:#FEE599>                                    |
 | Component |<back:#E0FFFF>                                    |
@@ -54,7 +54,7 @@ participant "SWAD-005-002\nPinIoDrv" as PinIoDrv #E2EFD9
 end box
 
 '---- Define "Hardware" layer ----------------------
-participant Hardware #A0522D
+participant Microcontroller #A0522D
 
 '---- Plan modules sequence-------------------------
 Main -> SmApp: Change to SM_INIT state
@@ -67,10 +67,10 @@ ClkApp -> ClkHal
 activate ClkHal
 ClkHal -> ClkDrv
 activate  ClkDrv
-ClkDrv -> Hardware: Enable clock sources
-activate Hardware
-Hardware --> ClkDrv
-deactivate Hardware
+ClkDrv -> Microcontroller: Enable clock sources
+activate Microcontroller
+Microcontroller --> ClkDrv
+deactivate Microcontroller
 ClkDrv --> ClkHal
 deactivate ClkDrv 
 ClkHal --> ClkApp
@@ -83,10 +83,10 @@ PinIoApp -> PinIoHal: Init PinIOs
 activate PinIoHal
 PinIoHal -> PinIoDrv
 activate PinIoDrv
-PinIoDrv -> Hardware: Drive GPIOs
-activate Hardware
-Hardware --> PinIoDrv 
-deactivate Hardware
+PinIoDrv -> Microcontroller: Drive GPIOs
+activate Microcontroller
+Microcontroller --> PinIoDrv 
+deactivate Microcontroller
 PinIoDrv --> PinIoHal
 deactivate PinIoDrv
 PinIoHal --> PinIoApp
@@ -111,10 +111,10 @@ TaskApp -> PinIoHal: GPIO sensing every 1s
 activate PinIoHal
 PinIoHal -> PinIoDrv
 activate PinIoDrv
-PinIoDrv -> Hardware
-activate Hardware
-Hardware --> PinIoDrv
-deactivate Hardware
+PinIoDrv -> Microcontroller
+activate Microcontroller
+Microcontroller --> PinIoDrv
+deactivate Microcontroller
 PinIoDrv --> PinIoHal
 deactivate PinIoDrv
 PinIoHal --> TaskApp 
