@@ -1,12 +1,3 @@
-'--- Color Setting --- 
-' System is #DAE2F3
-' Layer is #FEE599
-' Component is #lightcyan
-' Module is #E2EFD9
-' Unit is #gainsboro
-' Tiny is #pink
-'---------------------
-
 @startuml
 '----- Table Description ----
 'Object Colors Setting
@@ -14,13 +5,13 @@ skinparam defaultFontName Arial
 skinparam defaultFontSize 12
 legend top
 |=        Object  |=           Colors  |
-| Hardware  |<back:sienna>                                    |
-| System  |<back:mediumpurple>                                    |
+| Hardware  |<back:#A0522D>                                    |
+| System  |<back:#9370DB>                                    |
 | Layer  |<back:#FEE599>                                    |
-| Component |<back:#lightcyan>                                    |
+| Component |<back:#E0FFFF>                                    |
 | Module |<back:#E2EFD9>                                    |
-| Uint |<back:#aquamarine>                                    |
-| Tiny |<back:#pink>                                    |
+| Uint |<back:#7FFFD4>                                    |
+| Tiny |<back:#FFC0CB>                                    |
 'Arrow Function
 |=        Arrow |=        Description |
 | Solid Line (->) | Don't response value  |
@@ -63,7 +54,7 @@ participant "SWAD-005-002\nPinIoDrv" as PinIoDrv #E2EFD9
 end box
 
 '---- Define "Hardware" layer ----------------------
-participant Hardware #sienna
+participant Hardware #A0522D
 
 '---- Plan modules sequence-------------------------
 Main -> SmApp: Change to SM_INIT state
