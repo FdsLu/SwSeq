@@ -44,7 +44,7 @@ end box
 
 '---- Define "OS" component ------------------------
 box "OS (SWAD-004)" #aef2f7
-participant "SWAD-004-001\nfreeRTOS" as freeRTOS #E2EFD9
+participant "freeRTOS Modules" as RtosModules #E2EFD9
 end box
 
 '---- Define "Drivers" component -------------------
@@ -95,10 +95,10 @@ PinIoApp --> InitApp
 deactivate PinIoApp 
 InitApp -> RtosApp
 activate  RtosApp
-RtosApp -> freeRTOS: Tasks config
-activate freeRTOS
-freeRTOS --> RtosApp: Initialize finish
-deactivate freeRTOS
+RtosApp -> RtosModules: Tasks config
+activate RtosModules
+RtosModules --> RtosApp: Initialize finish
+deactivate RtosModules
 RtosApp --> InitApp
 deactivate RtosApp
 
