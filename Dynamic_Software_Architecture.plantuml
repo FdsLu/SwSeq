@@ -4,7 +4,7 @@
 skinparam defaultFontName Arial
 skinparam defaultFontSize 12
 legend top
-|=        Object  |=           Colors  |
+|=        Elements  |=           Colors  |
 | Microcontroller  |<back:#A0522D>                                    |
 | System  |<back:#9370DB>                                    |
 | Layer  |<back:#FEE599>                                    |
