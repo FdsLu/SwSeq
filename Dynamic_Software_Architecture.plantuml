@@ -27,6 +27,9 @@ participant "SWAD-001-007\nClkApp" as ClkApp #E2EFD9
 participant "SWAD-001-003\nPinIoApp" as PinIoApp #E2EFD9
 participant "SWAD-001-005\nRtosApp" as RtosApp #E2EFD9
 participant "SWAD-001-006\nTaskApp" as TaskApp #E2EFD9
+participant "SWAD-001-010\nCANApp" as CANApp #E2EFD9
+participant "SWAD-001-011\nUARTApp" as UARTApp #E2EFD9
+participant "SWAD-001-012\nFlashApp" as FlashApp #E2EFD9
 end box
 
 '---- Define "Service" component--------------------
@@ -40,17 +43,25 @@ end box
 box "HAL (SWAD-003)" #aef2f7
 participant "SWAD-003-001\nClkHal" as ClkHal #E2EFD9
 participant "SWAD-003-002\nPinIoHal" as PinIoHal #E2EFD9
+participant "SWAD-003-004\nCANHal" as CANHal #E2EFD9
+participant "SWAD-003-005\nUARTHal" as UARTHal #E2EFD9
+participant "SWAD-003-006\nFLSHal" as FLSHal #E2EFD9
+participant "SWAD-003-007\nFEEHal" as FEEHal #E2EFD9
 end box
 
 '---- Define "OS" component ------------------------
 box "OS (SWAD-004)" #aef2f7
-participant "freeRTOS Modules" as RtosModules #E2EFD9
+participant "SWAD-004-001\nfreeRTOS Modules" as RtosModules #E2EFD9
 end box
 
 '---- Define "Drivers" component -------------------
 box "Drivers (SWAD-005)" #aef2f7
 participant "SWAD-005-001\nClkDrv" as ClkDrv #E2EFD9
 participant "SWAD-005-002\nPinIoDrv" as PinIoDrv #E2EFD9
+participant "SWAD-005-004\nCANDrv" as CANDrv #E2EFD9
+participant "SWAD-005-005\nUARTDrv" as UARTDrv #E2EFD9
+participant "SWAD-005-006\nFLSDrv" as FLSDrv #E2EFD9
+participant "SWAD-005-007\nFEEDrv" as FEEDrv #E2EFD9
 end box
 
 '---- Define "Hardware" layer ----------------------
@@ -59,65 +70,209 @@ participant Microcontroller #A0522D
 '---- Plan modules sequence-------------------------
 Main -> SmApp: Change to SM_INIT state
 activate SmApp
-SmApp -> InitApp
+SmApp -> InitApp: Initialize
 activate InitApp
+
 InitApp -> ClkApp: Init Clks
 activate ClkApp
-ClkApp -> ClkHal
+ClkApp -> ClkHal: Initialize Clock
 activate ClkHal
-ClkHal -> ClkDrv
-activate  ClkDrv
+ClkHal -> ClkDrv: Configure Clock
+activate ClkDrv
 ClkDrv -> Microcontroller: Enable clock sources
 activate Microcontroller
-Microcontroller --> ClkDrv
+Microcontroller --> ClkDrv: Clock enabled
 deactivate Microcontroller
-ClkDrv --> ClkHal
-deactivate ClkDrv 
-ClkHal --> ClkApp
-deactivate ClkHal 
-ClkApp --> InitApp
-deactivate ClkApp 
-InitApp -->PinIoApp 
-activate PinIoApp 
-PinIoApp -> PinIoHal: Init PinIOs
+ClkDrv --> ClkHal: Clock configured
+deactivate ClkDrv
+ClkHal --> ClkApp: Clock initialized
+deactivate ClkHal
+ClkApp --> InitApp: Clock setup complete
+deactivate ClkApp
+
+InitApp -> PinIoApp: Init PinIOs
+activate PinIoApp
+PinIoApp -> PinIoHal: Initialize PinIOs
 activate PinIoHal
-PinIoHal -> PinIoDrv
+PinIoHal -> PinIoDrv: Configure GPIOs
 activate PinIoDrv
 PinIoDrv -> Microcontroller: Drive GPIOs
 activate Microcontroller
-Microcontroller --> PinIoDrv 
+Microcontroller --> PinIoDrv: GPIOs set
 deactivate Microcontroller
-PinIoDrv --> PinIoHal
+PinIoDrv --> PinIoHal: GPIOs configured
 deactivate PinIoDrv
-PinIoHal --> PinIoApp
+PinIoHal --> PinIoApp: PinIOs initialized
 deactivate PinIoHal
-PinIoApp --> InitApp
-deactivate PinIoApp 
-InitApp -> RtosApp
-activate  RtosApp
-RtosApp -> RtosModules: Tasks config
+PinIoApp --> InitApp: PinIO setup complete
+deactivate PinIoApp
+
+InitApp -> CANApp: Init CAN
+activate CANApp
+CANApp -> CANHal: Initialize CAN
+activate CANHal
+CANHal -> CANDrv: Configure CAN
+activate CANDrv
+CANDrv -> Microcontroller: Setup CAN hardware
+activate Microcontroller
+Microcontroller --> CANDrv: CAN hardware ready
+deactivate Microcontroller
+CANDrv --> CANHal: CAN configured
+deactivate CANDrv
+CANHal --> CANApp: CAN initialized
+deactivate CANHal
+CANApp --> InitApp: CAN setup complete
+deactivate CANApp
+
+InitApp -> UARTApp: Init UART
+activate UARTApp
+UARTApp -> UARTHal: Initialize UART
+activate UARTHal
+UARTHal -> UARTDrv: Configure UART
+activate UARTDrv
+UARTDrv -> Microcontroller: Setup UART hardware
+activate Microcontroller
+Microcontroller --> UARTDrv: UART hardware ready
+deactivate Microcontroller
+UARTDrv --> UARTHal: UART configured
+deactivate UARTDrv
+UARTHal --> UARTApp: UART initialized
+deactivate UARTHal
+UARTApp --> InitApp: UART setup complete
+deactivate UARTApp
+
+InitApp -> FlashApp: Init Flash
+activate FlashApp
+FlashApp -> FLSHal: Initialize Flash
+activate FLSHal
+FLSHal -> FLSDrv: Configure Flash
+activate FLSDrv
+FLSDrv -> Microcontroller: Setup Flash hardware
+activate Microcontroller
+Microcontroller --> FLSDrv: Flash hardware ready
+deactivate Microcontroller
+FLSDrv --> FLSHal: Flash configured
+deactivate FLSDrv
+FLSHal --> FlashApp: Flash initialized
+deactivate FLSHal
+FlashApp -> FEEHal: Initialize FEE
+activate FEEHal
+FEEHal -> FEEDrv: Configure FEE
+activate FEEDrv
+FEEDrv -> Microcontroller: Setup FEE
+activate Microcontroller
+Microcontroller --> FEEDrv: FEE ready
+deactivate Microcontroller
+FEEDrv --> FEEHal: FEE configured
+deactivate FEEDrv
+FEEHal --> FlashApp: FEE initialized
+deactivate FEEHal
+FlashApp --> InitApp: Flash setup complete
+deactivate FlashApp
+
+InitApp -> RtosApp: Initialize RTOS
+activate RtosApp
+RtosApp -> RtosModules: Configure Tasks
 activate RtosModules
-RtosModules --> RtosApp: Initialize finish
+RtosModules --> RtosApp: Tasks initialized
 deactivate RtosModules
-RtosApp --> InitApp
+RtosApp --> InitApp: RTOS setup complete
 deactivate RtosApp
 
-InitApp --> SmApp
-deactivate InitApp
-deactivate SmApp
-SmApp -> TaskApp: Change to SM_TASK state
+InitApp -> UDS: Initialize UDS
+activate UDS
+UDS --> InitApp: UDS initialized
+deactivate UDS
 
-TaskApp -> PinIoHal: GPIO sensing every 1s
-activate PinIoHal
-PinIoHal -> PinIoDrv
-activate PinIoDrv
-PinIoDrv -> Microcontroller
-activate Microcontroller
-Microcontroller --> PinIoDrv
-deactivate Microcontroller
-PinIoDrv --> PinIoHal
-deactivate PinIoDrv
-PinIoHal --> TaskApp 
-deactivate PinIoHal
-'---------------------------------------------------
+InitApp -> FuSa: Initialize FuSa
+activate FuSa
+FuSa --> InitApp: FuSa initialized
+deactivate FuSa
+
+InitApp -> Security: Initialize Security
+activate Security
+Security --> InitApp: Security initialized
+deactivate Security
+
+InitApp --> SmApp: Initialization complete
+deactivate InitApp
+SmApp -> TaskApp: Change to SM_TASK state
+deactivate SmApp
+
+activate TaskApp
+loop Every 1s
+    TaskApp -> PinIoHal: GPIO sensing
+    activate PinIoHal
+    PinIoHal -> PinIoDrv: Read GPIO state
+    activate PinIoDrv
+    PinIoDrv -> Microcontroller: Read GPIO
+    activate Microcontroller
+    Microcontroller --> PinIoDrv: GPIO state
+    deactivate Microcontroller
+    PinIoDrv --> PinIoHal: GPIO state
+    deactivate PinIoDrv
+    PinIoHal --> TaskApp: GPIO state
+    deactivate PinIoHal
+    TaskApp -> TaskApp: Process GPIO state
+
+    TaskApp -> CANHal: Check CAN messages
+    activate CANHal
+    CANHal -> CANDrv: Read CAN buffer
+    activate CANDrv
+    CANDrv -> Microcontroller: Get CAN data
+    activate Microcontroller
+    Microcontroller --> CANDrv: CAN data
+    deactivate Microcontroller
+    CANDrv --> CANHal: CAN messages
+    deactivate CANDrv
+    CANHal --> TaskApp: CAN messages
+    deactivate CANHal
+    TaskApp -> TaskApp: Process CAN messages
+
+    TaskApp -> UARTHal: Check UART data
+    activate UARTHal
+    UARTHal -> UARTDrv: Read UART buffer
+    activate UARTDrv
+    UARTDrv -> Microcontroller: Get UART data
+    activate Microcontroller
+    Microcontroller --> UARTDrv: UART data
+    deactivate Microcontroller
+    UARTDrv --> UARTHal: UART data
+    deactivate UARTDrv
+    UARTHal --> TaskApp: UART data
+    deactivate UARTHal
+    TaskApp -> TaskApp: Process UART data
+
+    TaskApp -> FLSHal: Check Flash status
+    activate FLSHal
+    FLSHal -> FLSDrv: Read Flash status
+    activate FLSDrv
+    FLSDrv -> Microcontroller: Get Flash status
+    activate Microcontroller
+    Microcontroller --> FLSDrv: Flash status
+    deactivate Microcontroller
+    FLSDrv --> FLSHal: Flash status
+    deactivate FLSDrv
+    FLSHal --> TaskApp: Flash status
+    deactivate FLSHal
+    TaskApp -> TaskApp: Process Flash status
+
+    alt Flash operation needed
+        TaskApp -> FEEHal: Perform Flash operation
+        activate FEEHal
+        FEEHal -> FEEDrv: Execute Flash operation
+        activate FEEDrv
+        FEEDrv -> Microcontroller: Perform Flash write/erase
+        activate Microcontroller
+        Microcontroller --> FEEDrv: Operation result
+        deactivate Microcontroller
+        FEEDrv --> FEEHal: Operation result
+        deactivate FEEDrv
+        FEEHal --> TaskApp: Flash operation result
+        deactivate FEEHal
+        TaskApp -> TaskApp: Handle Flash operation result
+    end
+end
+deactivate TaskApp
+
 @enduml
